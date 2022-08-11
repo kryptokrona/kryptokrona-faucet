@@ -38,18 +38,15 @@
 
 BTC: bc1ql97dlhhexma7agkk7gmg76t7ljycuqc9xgr4vl
 
-<img src="assets/img/btc-qr-code.png" alt="Bitcoin QR Code" width="200"/>
 
 ### Monero (XMR)
 
 XMR: 49AWzFTrZZvDKNzCUHPSXm5ZUyBrFan7xXXrKmfS6ircfcTAeiXBH1Yg99V4jiiEdT8RYhXvEiAgbMjEzq8AJJCbAd5ckJG
 
-<img src="assets/img/monero-qr-code.png" alt="Monero QR Code" width="200"/>
 
 ### Kryptokrona (XKR)
 XKR: SEKReXXU9aJPiwjX2XkpbK8ACMWbUNXcYPxUVSiUYpNdhj8Z2snEy8CjjorZUNyswQNfzAmVWuGksU72Sf3Kq79Zd3fJWHq4Nyx
 
-<img src="assets/img/kryptokrona-qr-code.png" alt="Kryptokrona QR Code" width="200"/>
 
 # Help and Support
 
