@@ -35,17 +35,15 @@
 ## Donate
 
 ### Bitcoin (BTC)
-
-BTC: bc1ql97dlhhexma7agkk7gmg76t7ljycuqc9xgr4vl
+bc1ql97dlhhexma7agkk7gmg76t7ljycuqc9xgr4vl
 
 
 ### Monero (XMR)
-
-XMR: 49AWzFTrZZvDKNzCUHPSXm5ZUyBrFan7xXXrKmfS6ircfcTAeiXBH1Yg99V4jiiEdT8RYhXvEiAgbMjEzq8AJJCbAd5ckJG
+49AWzFTrZZvDKNzCUHPSXm5ZUyBrFan7xXXrKmfS6ircfcTAeiXBH1Yg99V4jiiEdT8RYhXvEiAgbMjEzq8AJJCbAd5ckJG
 
 
 ### Kryptokrona (XKR)
-XKR: SEKReXXU9aJPiwjX2XkpbK8ACMWbUNXcYPxUVSiUYpNdhj8Z2snEy8CjjorZUNyswQNfzAmVWuGksU72Sf3Kq79Zd3fJWHq4Nyx
+SEKReXXU9aJPiwjX2XkpbK8ACMWbUNXcYPxUVSiUYpNdhj8Z2snEy8CjjorZUNyswQNfzAmVWuGksU72Sf3Kq79Zd3fJWHq4Nyx
 
 
 # Help and Support
