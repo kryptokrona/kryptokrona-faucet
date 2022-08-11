@@ -21,7 +21,7 @@
 </a>
 </p>
 
-## A simple faucet for new Hugin Messenger
+## A simple faucet for Hugin Messenger
 
 
 # Technologies
