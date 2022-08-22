@@ -25,7 +25,7 @@ const checkAddress = async (address) => {
     return !!claimed
 }
 
-const getClaimers = async () => {
+const getHowManyClaimers = async () => {
     const data = fs.readFileSync('./claimed.json')
     const json = JSON.parse(data)
     return json.length
