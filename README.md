@@ -1,27 +1,27 @@
-# Hugin Facuet
+# Kryptokrona Facuet
 
 <p>
 <a href="https://chat.kryptokrona.se">
     <img src="https://img.shields.io/discord/562673808582901793?label=Discord&logo=Discord&logoColor=white&style=flat">
 </a> 
 <a href="https://github.com/swepool/hugin-faucet/issues">
-    <img src="https://img.shields.io/github/issues/swepool/hugin-faucet">
+    <img src="https://img.shields.io/github/issues/kryptokrona/kryptokrona-faucet">
 </a>
 <a href="https://github.com/kryptokrona/hugin-cache/pulls">
-    <img src="https://img.shields.io/github/issues-pr/swepool/hugin-faucet">
+    <img src="https://img.shields.io/github/issues-pr/kryptokrona/kryptokrona-faucet">
 </a>
 <a href="https://github.com/kryptokrona/hugin-cache/commits/main">
-    <img src="https://img.shields.io/github/commit-activity/m/swepool/hugin-faucet">
+    <img src="https://img.shields.io/github/commit-activity/m/kryptokrona/kryptokrona-faucet">
 </a>
 <a href="https://github.com/kryptokrona/hugin-cache/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/swepool/hugin-faucet">
+    <img src="https://img.shields.io/github/contributors/kryptokrona/kryptokrona-faucet">
 </a>
 <a href="https://twitter.com/kryptokrona">
     <img src="https://img.shields.io/twitter/follow/kryptokrona">
 </a>
 </p>
 
-## A simple faucet for Hugin Messenger
+## A simple faucet used for Hugin Messenger
 
 
 # Technologies
