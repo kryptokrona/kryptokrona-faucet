@@ -31,7 +31,7 @@ express.use('/status', cors(corsOptions), statusRoute)
 //Faucet
 const faucetRoute = require('./routes/faucet')
 express.use(faucetRoute, faucetLimiter)
-express.use('/faucet', cors(corsOptions), faucetRoute)
+express.use('/claim', cors(corsOptions), faucetRoute)
 
 express.listen(
     PORT,
