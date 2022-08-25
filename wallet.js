@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const WALLET_NAME = 'faucet'
 const WALLET_PASSWORD = 'faucet123'
-const NODE = 'blocksum.org'
+const NODE = 'localhost'
 const PORT = 11898
 const AMOUNT_TO_SEND = 5
 const daemon = new WB.Daemon(NODE, PORT)
