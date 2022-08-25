@@ -1,4 +1,5 @@
 const fs = require('fs')
+const {getCurrentTimestamp} = require("./utils");
 const Crypto = require('kryptokrona-crypto').Crypto
 const xkr = new Crypto()
 
@@ -7,7 +8,10 @@ const saveAddress = async (address) => {
 
     fs.readFile('./claimed.json', function (err, data) {
         let json = JSON.parse(data)
-        json.push({"hash": hash})
+        json.push({
+            "hash": hash,
+            "timestamp": getCurrentTimestamp()
+        })
 
         fs.writeFile('./claimed.json', JSON.stringify(json), () => {
             console.log('🚨 SAVED HASH')
@@ -21,7 +25,6 @@ const checkAddress = async (address) => {
     const json = JSON.parse(data)
     const claimed = json.find(i => i.hash === hash)
 
-    console.log('🚨 CLAIMED ', !!claimed)
     return !!claimed
 }
 
@@ -43,4 +46,4 @@ function toHex(str) {
     return result;
 }
 
-module.exports = {saveAddress, checkAddress, getClaimers}
+module.exports = {saveAddress, checkAddress, getHowManyClaimers}
