@@ -5,7 +5,7 @@ const WALLET_NAME = 'faucet'
 const WALLET_PASSWORD = 'faucet123'
 const NODE = 'localhost'
 const PORT = 11898
-const AMOUNT_TO_SEND = 5
+const AMOUNT_TO_SEND = 500000
 const daemon = new WB.Daemon(NODE, PORT)
 
 let wallet
@@ -20,23 +20,19 @@ const logIntoWallet = async () => {
 
 const startWallet = async () => {
     //Start sync process
-
     wallet = await logIntoWallet()
 
     await wallet.start();
 
     wallet.enableAutoOptimization(false)
-
     const [walletBlockCount, localDaemonBlockCount, networkBlockCount] = wallet.getSyncStatus();
 
     if (walletBlockCount === 0) {
         await wallet.reset(networkBlockCount - 100)
     }
 
-    console.log('BOT ADDRESS:', wallet.getPrimaryAddress())
-
     wallet.on('heightchange', async (walletBlockCount, localDaemonBlockCount, networkBlockCount) => {
-        console.log('SYNC: ' + walletBlockCount, 'local: ' + localDaemonBlockCount, 'network: '+ networkBlockCount)
+        console.log('SYNC: ' + walletBlockCount, 'local: ' + localDaemonBlockCount, 'network: ' + networkBlockCount)
         console.log('BALANCE: ' + await wallet.getBalance())
 
         console.log('SAVING WALLET')
@@ -62,6 +58,13 @@ const initWallet = async () => {
                 console.log('Failed to save wallet!');
             }
         }
+        //Creates a .json file to save claimers in
+        if (!(fs.existsSync('./claimed.json'))) {
+            fs.writeFile('claimed.json', '[]', function (err) {
+                if (err) throw err;
+                console.log('File is created successfully.');
+            });
+        }
 
         //Start wallet
         await startWallet()
@@ -82,21 +85,13 @@ const sendTransaction = async (address) => {
     try {
         await optimizeMessages()
 
-        const result = await wallet.sendTransactionAdvanced(
+        return await wallet.sendTransactionAdvanced(
             [[address, AMOUNT_TO_SEND]],
             3,
             {fixedFee: 10000, isFixedFee: true},
         );
 
-        if (result.success) {
-            console.log(`Sent transaction, hash ${result.transactionHash}, fee ${WB.prettyPrintAmount(result.fee)}`);
-            return result.success
-        } else {
-            console.log(`Failed to send transaction: ${result.error.toString()}`);
-            return result.error.toString()
-        }
-
-    } catch(err) {
+    } catch (err) {
         console.log('Error', err);
     }
 }
