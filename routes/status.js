@@ -2,8 +2,7 @@ const { getWalletInfo } = require("../wallet");
 const { getHowManyClaimers } = require("../db");
 const router = require('express').Router();
 
-//TODO error handling
-router.get('/', async (_req, res) => {
+router.get('/', async (req, res) => {
     console.log('🚨 STATUS REQUEST')
 
     let wallet = await getWalletInfo()
