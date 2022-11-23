@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
             })
             console.log(`Sent transaction, hash ${send.transactionHash}, fee ${WB.prettyPrintAmount(send.fee)}`);
             await saveAddress(address)
-            console.log('🚨 SENT XKR AND SAVED CLAIMER')
+            console.log('🚨 SENT XKR AND SAVED CLAIMER!')
         } else {
             res.status(500).send({
                 sent: false,
