@@ -75,9 +75,37 @@ const initWallet = async () => {
 }
 
 const getWalletInfo = async () => {
+    if (!wallet) {
+        throw new Error('Wallet is not initialized')
+    }
+
     let balance = await wallet.getBalance()
     let address = wallet.getPrimaryAddress()
     return {balance, address}
+}
+
+const getNodeInfo = async () => {
+    try {
+        await daemon.updateDaemonInfo()
+
+        const localBlockCount = daemon.getLocalDaemonBlockCount()
+        const networkBlockCount = daemon.getNetworkBlockCount()
+
+        return {
+            connected: localBlockCount > 0 || networkBlockCount > 0,
+            connection: daemon.getConnectionInfo(),
+            localBlockCount,
+            networkBlockCount,
+            synced: networkBlockCount > 0 && localBlockCount >= networkBlockCount,
+            blocksBehind: Math.max(networkBlockCount - localBlockCount, 0),
+        }
+    } catch (err) {
+        return {
+            connected: false,
+            connection: daemon.getConnectionInfo(),
+            error: err.toString(),
+        }
+    }
 }
 
 const sendTransaction = async (address) => {
@@ -151,4 +179,4 @@ const optimizeMessages = async nbrOfTxs => {
 
 }
 
-module.exports = {initWallet, sendTransaction, getWalletInfo}
+module.exports = {initWallet, sendTransaction, getWalletInfo, getNodeInfo}
