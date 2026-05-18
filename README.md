@@ -23,6 +23,21 @@
 
 ## A simple faucet used for Hugin Messenger
 
+## Node failover
+
+By default the faucet connects to a local Kryptokrona daemon at `localhost:11898`.
+Set `NODE_HOST`, `NODE_PORT`, and optionally `NODE_SSL` to change the primary
+node.
+
+Set `BACKUP_NODES` to a comma-separated list of fallback nodes. The faucet checks
+the primary node first, then picks from the backup list in random order until it
+finds a reachable daemon.
+
+```bash
+NODE_HOST=localhost
+NODE_PORT=11898
+BACKUP_NODES=node-1.example.com:11898,https://node-2.example.com
+```
 
 # Technologies
 
