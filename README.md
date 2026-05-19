@@ -32,6 +32,20 @@
 - kryptokrona-wallet-backend-js
 - kryptokrona-crypto
 
+# Configuration
+
+The faucet connects to a Kryptokrona daemon before opening or creating the wallet.
+By default it uses `localhost:11898`.
+
+You can provide a comma-separated fallback list with `NODE_LIST`:
+
+```bash
+NODE_LIST=primary.example.com:11898,backup.example.com:11898 npm run dev
+```
+
+If the first daemon is unavailable or reports no network height, the faucet tries
+the next entry before starting the wallet.
+
 ## Donate
 
 ### Bitcoin (BTC)
