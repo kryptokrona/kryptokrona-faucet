@@ -3,12 +3,53 @@ const fs = require('fs')
 
 const WALLET_NAME = 'faucet'
 const WALLET_PASSWORD = 'faucet123'
-const NODE = 'localhost'
-const PORT = 11898
+const NODE = process.env.NODE || 'localhost'
+const PORT = Number(process.env.NODE_PORT || 11898)
+const NODE_LIST = process.env.NODE_LIST || `${NODE}:${PORT}`
 const AMOUNT_TO_SEND = 500000
-const daemon = new WB.Daemon(NODE, PORT)
+let daemon
 
 let wallet
+
+const parseNode = node => {
+    const parts = node.trim().split(':')
+    const host = parts[0]
+    const port = Number(parts[1] || PORT)
+
+    if (!host || Number.isNaN(port)) {
+        return null
+    }
+
+    return {host, port}
+}
+
+const getNodeCandidates = () => NODE_LIST
+    .split(',')
+    .map(parseNode)
+    .filter(Boolean)
+
+const createDaemon = ({host, port}) => new WB.Daemon(host, port)
+
+const resolveDaemon = async () => {
+    const nodes = getNodeCandidates()
+
+    for (const node of nodes) {
+        const candidate = createDaemon(node)
+
+        try {
+            await candidate.init()
+
+            if (candidate.getNetworkBlockCount() > 0) {
+                console.log(`Connected to daemon ${node.host}:${node.port}`)
+                return candidate
+            }
+        } catch (err) {
+            console.log(`Failed to connect to daemon ${node.host}:${node.port}: ${err.toString()}`)
+        }
+    }
+
+    throw new Error('No healthy daemon available. Set NODE_LIST to one or more host:port entries.')
+}
 
 const logIntoWallet = async () => {
     const [wallet, error] = await WB.WalletBackend.openWalletFromFile(daemon, `${WALLET_NAME}.wallet`, WALLET_PASSWORD);
@@ -46,6 +87,8 @@ const startWallet = async () => {
 
 const initWallet = async () => {
     try {
+        daemon = await resolveDaemon()
+
         //Creates a wallet if we don't have one
         if (!(fs.existsSync('./faucet.wallet'))) {
             console.log('Creating wallet')
@@ -151,4 +194,4 @@ const optimizeMessages = async nbrOfTxs => {
 
 }
 
-module.exports = {initWallet, sendTransaction, getWalletInfo}
+module.exports = {initWallet, sendTransaction, getWalletInfo, getNodeCandidates, resolveDaemon}
