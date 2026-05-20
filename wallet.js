@@ -1,14 +1,78 @@
 const WB = require('kryptokrona-wallet-backend-js')
 const fs = require('fs')
+const fetch = require('cross-fetch')
 
 const WALLET_NAME = 'faucet'
 const WALLET_PASSWORD = 'faucet123'
-const NODE = 'localhost'
-const PORT = 11898
+const NODE = process.env.NODE || 'localhost'
+const PORT = Number(process.env.PORT) || 11898
+const BACKUP_NODES = process.env.BACKUP_NODES || ''
 const AMOUNT_TO_SEND = 500000
-const daemon = new WB.Daemon(NODE, PORT)
 
 let wallet
+let daemon
+
+const parseNode = node => {
+    const normalized = node.trim().replace(/^https?:\/\//, '').replace(/\/$/, '')
+    const [host, port] = normalized.split(':')
+
+    return {
+        host,
+        port: Number(port) || PORT
+    }
+}
+
+const shuffle = nodes => {
+    for (let i = nodes.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [nodes[i], nodes[j]] = [nodes[j], nodes[i]]
+    }
+
+    return nodes
+}
+
+const getDaemonCandidates = () => {
+    const primary = [{host: NODE, port: PORT}]
+    const backups = BACKUP_NODES
+        .split(',')
+        .map(parseNode)
+        .filter(node => node.host)
+
+    return primary.concat(shuffle(backups))
+}
+
+const isDaemonAvailable = async node => {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 5000)
+
+    try {
+        const response = await fetch(`http://${node.host}:${node.port}/info`, {
+            signal: controller.signal
+        })
+
+        return response.ok
+    } catch (err) {
+        console.log(`Daemon ${node.host}:${node.port} unavailable: ${err.message}`)
+        return false
+    } finally {
+        clearTimeout(timeout)
+    }
+}
+
+const initDaemon = async () => {
+    const candidates = getDaemonCandidates()
+
+    for (const node of candidates) {
+        if (await isDaemonAvailable(node)) {
+            console.log(`Using daemon ${node.host}:${node.port}`)
+            daemon = new WB.Daemon(node.host, node.port)
+            return
+        }
+    }
+
+    const nodes = candidates.map(node => `${node.host}:${node.port}`).join(', ')
+    throw new Error(`No daemon available. Checked: ${nodes}`)
+}
 
 const logIntoWallet = async () => {
     const [wallet, error] = await WB.WalletBackend.openWalletFromFile(daemon, `${WALLET_NAME}.wallet`, WALLET_PASSWORD);
@@ -46,6 +110,8 @@ const startWallet = async () => {
 
 const initWallet = async () => {
     try {
+        await initDaemon()
+
         //Creates a wallet if we don't have one
         if (!(fs.existsSync('./faucet.wallet'))) {
             console.log('Creating wallet')

@@ -23,6 +23,15 @@
 
 ## A simple faucet used for Hugin Messenger
 
+## Node fallback
+
+The faucet connects to `NODE:PORT` first and falls back to a random backup node
+from `BACKUP_NODES` when the primary daemon is unavailable.
+
+```sh
+NODE=localhost PORT=11898 BACKUP_NODES=node1.example.com:11898,node2.example.com:11898 npm run dev
+```
+
 
 # Technologies
 
