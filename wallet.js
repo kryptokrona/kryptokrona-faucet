@@ -1,14 +1,13 @@
 const WB = require('kryptokrona-wallet-backend-js')
 const fs = require('fs')
+const {formatNode, getConfiguredNodes} = require('./nodeConfig')
 
 const WALLET_NAME = 'faucet'
 const WALLET_PASSWORD = 'faucet123'
-const NODE = 'localhost'
-const PORT = 11898
 const AMOUNT_TO_SEND = 500000
-const daemon = new WB.Daemon(NODE, PORT)
 
 let wallet
+let daemon
 
 const logIntoWallet = async () => {
     const [wallet, error] = await WB.WalletBackend.openWalletFromFile(daemon, `${WALLET_NAME}.wallet`, WALLET_PASSWORD);
@@ -16,6 +15,33 @@ const logIntoWallet = async () => {
         console.log('Failed to open wallet: ' + error.toString());
     }
     return wallet
+}
+
+const createDaemon = node => new WB.Daemon(node.host, node.port, undefined, node.ssl)
+
+const isDaemonAvailable = async daemon => {
+    await daemon.updateDaemonInfo()
+    return daemon.getLocalDaemonBlockCount() > 0 || daemon.getNetworkBlockCount() > 0
+}
+
+const selectDaemon = async () => {
+    const nodes = getConfiguredNodes(process.env)
+
+    for (const node of nodes) {
+        const candidate = createDaemon(node)
+        const label = formatNode(node)
+
+        console.log(`Checking daemon node ${label}`)
+
+        if (await isDaemonAvailable(candidate)) {
+            console.log(`Using daemon node ${label}`)
+            return candidate
+        }
+
+        console.log(`Daemon node ${label} is unavailable`)
+    }
+
+    throw new Error('No configured daemon nodes are available')
 }
 
 const startWallet = async () => {
@@ -46,6 +72,8 @@ const startWallet = async () => {
 
 const initWallet = async () => {
     try {
+        daemon = await selectDaemon()
+
         //Creates a wallet if we don't have one
         if (!(fs.existsSync('./faucet.wallet'))) {
             console.log('Creating wallet')
